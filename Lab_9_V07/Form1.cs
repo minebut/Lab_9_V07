@@ -1,52 +1,45 @@
-using System;
-using System.Drawing;
-using System.Windows.Forms;
-
 namespace Lab_9_V07
 {
     public partial class Form1 : Form
     {
         private Button[] ButtonNames;
+        private Label[] timeLabel; 
 
         public Form1()
         {
             InitializeComponent();
-
-
-
-
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
             CreateElements(sender, e);
         }
 
         String[] nameBox = { "Координати", "Швидкість", "Прискорення" };
         String[] names = { "Закон руху", "X=sin(pit^2/2)" };
         String[] nameButton = { "Розрахунок", "Вихід", "Перевірити" };
-        String[] timeLabels = { "t = ", "t = ", "t = " };
+        String[] timeLabels = { $"t = {0} ", $"t = {1}", $"t = {2}" };
         TextBox[,] myMasTextBox;
 
         private void CreateElements(object sender, EventArgs e)
         {
-
             #region create time labels
+
             int startX = 210;
             int startY = 170;
             int xSp = 205;
 
-
-
+            timeLabel = new Label[timeLabels.Length];
             for (int i = 0; i < timeLabels.Length; i++)
             {
-                Label timeLabel = new Label();
-                timeLabel.Text = timeLabels[i];
-                timeLabel.Size = new Size(50, 20);
-                timeLabel.Location = new Point(startX + i * xSp, startY);
-                timeLabel.TextAlign = ContentAlignment.MiddleCenter;
-                this.Controls.Add(timeLabel);
+                timeLabel[i] = new Label();
+                timeLabel[i].Text = timeLabels[i];
+                timeLabel[i].Size = new Size(50, 20);
+                timeLabel[i].Location = new Point(startX + i * xSp, startY);
+                timeLabel[i].TextAlign = ContentAlignment.MiddleCenter;
+                this.Controls.Add(timeLabel[i]);
+
+                timeLabel[i].Click += LabelClic;
             }
             #endregion
 
@@ -55,13 +48,11 @@ namespace Lab_9_V07
             for (int i = 0; i < 2; i++)
             {
                 ButtonNames[i] = new Button();
-                ButtonNames[i] = new Button();
-                ButtonNames[i].Text = nameButton[i];  
+                ButtonNames[i].Text = nameButton[i];
                 ButtonNames[i].Size = new Size(100, 30);
                 ButtonNames[i].Location = new Point(590, 420 + i * 40);
                 this.Controls.Add(ButtonNames[i]);
                 ButtonNames[i].Click += ButtonClick;
-                
             }
             #endregion
 
@@ -111,7 +102,7 @@ namespace Lab_9_V07
                     myMasTextBox[i, j].Size = new Size(200, 20);
                     myMasTextBox[i, j].Location = new Point(x + j * xSpacing, y + i * ySpacing);
                     this.Controls.Add(myMasTextBox[i, j]);
-                    myMasTextBox[i, j].Text = $"Box "+ " " + i + " " + j;
+                    myMasTextBox[i, j].Text = $"Box {i} {j}";
                 }
             }
             #endregion
@@ -134,18 +125,43 @@ namespace Lab_9_V07
             }
         }
 
+        private void LabelClic(object sender, EventArgs e)
+        {
+            using (var Tnam = new Tnam())
+            {
+                if (radioButton1.Checked)
+                {
+                    Tnam.ShowDialog();
+                    int t = Tnam.TNumber;
+                    Label clickedLabel = sender as Label;
+
+                    if (clickedLabel.Text.StartsWith("t"))
+                    {
+                        clickedLabel.Text = $"t = {t}";
+                    }
+                    else if (clickedLabel.Text.StartsWith("t"))
+                    {
+                        clickedLabel.Text = $"t = {t}";
+                    }
+                    else if (clickedLabel.Text.StartsWith("t"))
+                    {
+                        clickedLabel.Text = $"t = {t}";
+                    }
+                }
+            }
+        }
+
         private void RadioButtons_CheckedChanged(object sender, EventArgs e)
         {
             if (ButtonNames != null && ButtonNames.Length > 0)
             {
-                
                 if (radioButton2.Checked)
                 {
-                    ButtonNames[0].Text = nameButton[2]; 
+                    ButtonNames[0].Text = nameButton[2];
                 }
                 else if (radioButton1.Checked)
                 {
-                    ButtonNames[0].Text = nameButton[0]; 
+                    ButtonNames[0].Text = nameButton[0];
                 }
             }
         }
